@@ -1,24 +1,48 @@
-import logo from './logo.svg';
+import { useCallback, useRef, useState } from 'react';
 import './App.css';
+import TodoInsert from './components/TodoInsert';
+import TodoList from './components/TodoList';
+import TodoTemplate from './components/TodoTemplate';
 
 function App() {
+  const [todos, setTodos] = useState([
+    {
+      id:1,
+      text: '리액트 기초 공부',
+      checked : true
+    },
+    {
+      id:2,
+      text: '컴포넌트 스타일링, SCSS사용해봄',
+      checked : true
+    },
+    {
+      id:3,
+      text: '일정관리 앱 만들어보기',
+      checked : false
+    },
+  ])  
+
+  const nextId = useRef(4)
+
+  const onInsert = useCallback((text) => {
+    const todo = {
+      id:nextId.current,
+      text,
+      checked:false,
+    };
+    setTodos(todos.concat(todo));
+    nextId.current += 1
+  }, [todos])
+
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+    <TodoTemplate>
+      <TodoInsert onInsert={onInsert}/>
+      <TodoList todos={todos}/>
+    </TodoTemplate>
+    </>
   );
 }
 
