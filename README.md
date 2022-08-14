@@ -29,10 +29,10 @@ Prettire는 코드스타일 자동정리도구이다. 프로젝트의 최상위 
 
 ## 2. UI 구성하기<br>
 ### 컴포넌트의 용도<br>
-- TodoTemplate : 화면 메인, 일정관리 내용을 보여준다<br>
-- TodoInsert : input을 통해 새로운 항목을 입출력 하는 역할의 컴포넌트, state를 통해 input의 상태를 관리한다<br>
-- TodoList : state로 관리되는 input값을 props로 받아와 배열 내장함수 map을 통해 각각의 항목으로 만든 후 TodoListItem컴포넌트로 보낸다<br>
-- TodoListItem : 각 할일 항목에 대한 정보를 보여주는 컴포넌트, todo객체를 받아와서 각각의 상태에 따른 style을 보여준다<br>
+- **TodoTemplate** : 화면 메인, 일정관리 내용을 보여준다<br>
+- **TodoInsert** : input을 통해 새로운 항목을 입출력 하는 역할의 컴포넌트, state를 통해 input의 상태를 관리한다<br>
+- **TodoList** : state로 관리되는 input값을 props로 받아와 배열 내장함수 map을 통해 각각의 항목으로 만든 후 TodoListItem컴포넌트로 보낸다<br>
+- **TodoListItem** : 각 할일 항목에 대한 정보를 보여주는 컴포넌트, todo객체를 받아와서 각각의 상태에 따른 style을 보여준다<br>
 <br>
 
 ### jsconfig.json<br>
@@ -78,11 +78,9 @@ Prettire는 코드스타일 자동정리도구이다. 프로젝트의 최상위 
 <br>
 
 ## 3. 기능 구현하기<br>
-image.png
-<br>
-
-### 메인에 Todo탭 보여주기<br>
+### (1)메인에 Todo탭 보여주기<br>
 **App에서 todos 상태 관리**<br>
+useState로 관리하는 todos를 TodoList에 props로 전달해주었다.<br>
 ```
 function App() {
   const [todos, setTodos] = useState([
@@ -103,9 +101,11 @@ function App() {
   );
 }
 ```
-useState로 관리하는 todos를 TodoList에 props로 전달해주었다.<br>
+<br>
 
-**TodoList**
+**TodoList**<br>
+- App에서 props로 받은 todos를 map을 돌려서 하나씩 출력해 TodoListItem에 todo props로 보낸다. <br>
+- map을 돌릴 때에는 key값을 넣어줘야 하기 때문에, 각 항목의 고유값인 id를 넣어준다.<br>
 ```
 const TodoList = ({todos}) =>{
   console.log(todos)
@@ -118,11 +118,9 @@ const TodoList = ({todos}) =>{
   )
 }
 ```
-- App에서 props로 받은 todos를 map을 돌려서 하나씩 출력해 TodoListItem에 todo props로 보낸다. 
-- map을 돌릴 때에는 key값을 넣어줘야 하기 때문에, 각 항목의 고유값인 id를 넣어준다.
 <br>
 
-**TodoListItem**
+**TodoListItem**<br>
 ```
 const TodoListItem = ({ todo }) =>{
   //구조분해할당으로 객체의 값을 해체하여 그 값을 개별 변수에 담을 수 있게 했다.
@@ -144,11 +142,12 @@ const TodoListItem = ({ todo }) =>{
 ```
 <br>
 
-### 항목 추가기능<br>
+### (2)항목 추가기능<br>
 - input에 입력하는 값을 관리할 수 있도록 useState의 value값의 상태를 정의한다<br>
 - input에 onChange함수를 작성하는데, 함수를 만들고 재사용 할 수 있도록 useCallback(Hook)을 사용한다.<br>
+<br>
 
-**TodiInsert**
+#### TodoInsert
 ```
   const [ value, setValue ] = useState('')
   const handleOnchange = useCallback((e) =>{
@@ -177,7 +176,7 @@ const TodoListItem = ({ todo }) =>{
 ```
 <br>
 
-**App => onInsert함수**
+#### App => onInsert함수
 > - todos 배열에 새 객체를 추가해야 한다.<br>
 > - 새로운 객체가 생성될 때마다 id의 값은 1씩 증가해야 한다 -> useRef를 사용<br>
 >  ( useRef의 current속성을 사용해 id값을 만들어놓음 -> 렌더링 되어도 current속성값은 변하지 않음 )<br>
@@ -197,7 +196,7 @@ const onInsert = useCallback((text) => {
 ```
 <br>
 
-**TodoInsert에서 onSubmit 이벤트 실행하기**<br>
+#### TodoInsert에서 onSubmit 이벤트 실행하기<br>
 > input에 값을 넣고 button을 클릭하면 이벤트를 실행해야 한다<br>
 > 실행하는 이벤트에는 props로 받아온 onInset 함수를 넣어준다<br>
 > **Click이벤트를 사용해도 되었는데, form-submit을 사용한 이유는?**<br>
@@ -205,7 +204,7 @@ const onInsert = useCallback((text) => {
 > onSubmit의 경우 input에서 Enter를 눌렀을 때도 이벤트가 발생하기 때문이다. <br>
 <br>
 
-### 항목 삭제기능<br>
+### (3)항목 삭제기능<br>
 **App=> onRemove함수**<br>
 > App에서 onRemove함수를 만들고<br>
 > TodoList -> TodolistItem로 props를 넘겨주어 TodoListItem에서 사용할 수 있게 한다<br> 
@@ -226,7 +225,7 @@ const onInsert = useCallback((text) => {
 <br>
 
 
-### 항목 체크기능<br>
+### (4)항목 체크기능<br>
 **App=> onToggle함수**<br>
 > toggle함수 내용: 배열 내장함수 map을 사용하여 특정 id를 가지고 있으면 checked항목이 반대로 바뀌며 <br>
 > 해당 항목의 스타일이 글자색이 옅어지고, 중앙에 취소선이 생기게 한다. <br>
@@ -239,6 +238,11 @@ const onInsert = useCallback((text) => {
 ```
 <br>
 
-**만들고 난 후**<br>
-처음 리액트를 공부할 때보다 훨씬 이해가 잘돼서 재미있었다. 그리고 드문드문 알고 있었던 지식이 순서대로 정리가 되는 느낌이었다. 책으로 코드를 이해하고, 이해가 잘 되지 않는 부분은 직접 검색해서 찾아보기도 하면서 prettire, jsconfig.json, Scss문법, style코드 등을 검색해서 정리해 볼 수 있는 좋은 시간이었다. 깃허브에는 더 정리하지 못한 부분은 블로그에 하나씩 떼어서 정리해볼 생각이다. <br>
-더욱이 그냥 따라치던 코드에서 '왜 이렇게 되는거지?'라는 의문이 생기는 몇 부분도 있었고, 컴포넌트 사이에 props를 내려주는 부분(?)에서 굳이.. 이 컴포넌트에서는 사용할 필요 없는 props를 줄줄이 내려줘야 한다는 생각이 들었고 redux가 필요한 상황은 이런 상황이라는 것을 체험?하게 되었다. 아주 간단한 프로젝트지만 많은 것을 공부할 수 있게 해준 프로젝트였다.
+#### After <br>
+<hr>
+처음 리액트를 공부할 때보다 훨씬 이해가 잘돼서 재미있었다.<br>
+드문드문 알고 있었던 지식이 순서대로 정리가 되는 느낌이었다.<br> 
+책으로 코드를 이해하고, prettire, jsconfig.json, Scss문법, style코드 등 낯선 개념들을 검색해서 정리해 볼 수 있는 좋은 시간이었다. 깃허브에는 더 정리하지 못한 부분은 블로그에 하나씩 떼어서 정리해볼 생각이다. <br>
+더욱이 그냥 따라치던 코드에서 '왜 이렇게 되는거지?'라는 의문이 생기는 몇 부분도 있었고,<br>
+컴포넌트 사이에 props를 내려주는 부분(?)에서 이 컴포넌트에서는 사용할 필요 없는 props를 줄줄이 내려줘야 하는 부분을 보면서 redux가 필요한 상황은 이런 상황이라는 것을 체험?하게 되었다.<br> 
+아주 간단한 프로젝트지만 많은 것을 공부할 수 있게 해준 프로젝트였다.
