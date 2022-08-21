@@ -46,6 +46,7 @@ export default React.memo(TodoListItem);
 - 새로운 상태를 setTodos에 넣어주는 것이 아니라, 상태 업데이트를 어떻게 할지 정의해주는 업데이트 함수를 넣을 수 있다. 
 - 이를 **함수형 업데이트**라고 부른다<br>
 <br>
+
 ```
   const onRemove = useCallback((id) => {
     // setTodos에 상태값을 넣는 게아니라, 업데이트 함수를 넣는 것
@@ -60,7 +61,7 @@ export default React.memo(TodoListItem);
 동일한 state를 연속적으로 업데이트하는 경우, 모든 요청에 따라 setState를 각각 동기로 수행한 후 바로 리렌더링 하는 것이 아니라 **변경 사항을 모아서 한번에 일괄처리(batch)를 한다** 전달된 setState를 하나로 병합한 후 최종적으로 한 번의 setState를 하게 되어 **마지막 명령만 수행**하게 된다.<br>
 <br>
 
-useState값이 바뀔 때마다 렌더링 하는 방법은?<br>
+###useState값이 바뀔 때마다 렌더링 하는 방법은?<br>
 1. useEffect의 []빈 배열 안의 요소를 이용해 상태값을 바로 업데이트 하는 것<br>
 2. **함수형 업데이트**<br>
 함수형 업데이트란?? setState를 줄 때 어떠한 값을 주는 게 아니라 함수를 통해서 전달하는 방식을 이용하는 것<br>
@@ -83,7 +84,6 @@ useState값이 바뀔 때마다 렌더링 하는 방법은?<br>
     console.log(count)
   }
 ```
-<br>
 이처럼 state의 변경시마다 렌더링을 하고 싶다면 함수형 업데이트를 반드시 기억할 것!.<br>
 <br>
 
